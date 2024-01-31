@@ -1,0 +1,15 @@
+{
+  "name": "hyperapp-actionpack",
+  "version": "0.0.1-beta.0",
+  "description": "This is a proof of concept of how to build actions in a service container that you can manage globally.",
+  "type": "module",
+  "main": "actionPack.js",
+  "scripts": {
+    "test": "node --test"
+  },
+  "author": "Alex Barry (npm@mrbarry.com)",
+  "license": "MIT",
+  "dependencies": {
+    "composable-state": "^0.1.0"
+  }
+}
