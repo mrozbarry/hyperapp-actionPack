@@ -1,59 +1,105 @@
 import { collect, composable } from 'composable-state';
 
-export const create = () => {
-  const actions = {};
-  let middleware = [];
+const nullLogger = {
+  groupCollapsed: () => {},
+  groupEnd: () => {},
+  log: () => {},
+};
 
-  const declare = (name, callback) => {
-    if (name in actions) {
+const action = (name, fn, middleware = [], logger = nullLogger) => {
+  return (state, props) => {
+    logger.groupCollapsed('actionPack.run', name);
+
+    logger.log('middleware', middleware);
+    logger.log('state', state);
+    logger.log('props', props);
+
+    const [actionMutations, ...effects] = [].concat(fn(props, state));
+    logger.log('mutations', actionMutations);
+    logger.log('effects', effects);
+
+    const nextState = composable(state, collect([...middleware.map(callback => callback(props)), actionMutations]));
+    logger.log('computed state', nextState);
+
+    logger.groupEnd();
+
+    return [nextState, ...effects];
+  };
+};
+
+export class ActionPack
+{
+  #logger = null;
+  #actions = {};
+
+  /**
+   * @param {Console} logger
+   */
+  constructor(logger) {
+    this.#logger = logger || nullLogger;
+
+    this.declare = this.declare.bind(this);
+    this.callback = this.callback.bind(this);
+    this.act = this.act.bind(this);
+    this.run = this.run.bind(this);
+    this.andThen = this.andThen.bind(this);
+  }
+
+  /**
+   * @param {string} name
+   * @param {Function} stateMutator
+   * @returns {Function}
+   */
+  declare(name, stateMutator) {
+    if (name in this.#actions) {
       throw new Error(`Cannot redeclare action "${name}"`);
     }
 
-    actions[name] = (middlewareFns = []) => (state, props) => {
-      const [actionMutations, ...effects] = [].concat(callback(props, state));
-      const nextState = composable(state, collect([...middlewareFns.map(fn => fn(props)), actionMutations]));
-      return [nextState, ...effects];
-    };
+    this.#actions[name] = action(name, stateMutator, [], this.#logger);
+    return this.#actions[name];
+  }
 
-    return actions[name];
-  };
-
-  const act = (name, props) => {
-    if (!(name in actions)) {
-      throw new Error(`Cannot run action "${name}", it was not declared`);
+  /**
+   * @param {string} name
+   * @returns {Function}
+   */
+  callback(name) {
+    if (!(name in this.#actions)) {
+      throw new Error(`Cannot find action "${name}", it was not declared`);
     }
-    const tuple = [actions[name](middleware), props];
-    middleware = [];
+    return this.#actions[name];
+  }
 
-    return tuple;
-  };
+  /**
+   * @param {string} name
+   * @returns {Array}
+   */
+  act(name, props) {
+    return [this.callback(name), props];
+  }
 
-  const callback = (name) => {
-    if (!(name in actions)) {
-      throw new Error(`Cannot run action "${name}", it was not declared`);
-    }
-    const action = actions[name](middleware);
-    middleware = [];
-    return action;
-  };
+  /**
+   * @param {string} name
+   * @props {Object} props
+   * @props {Object} initialState
+   * @returns {Array}
+   */
+  run(name, props, initialState) {
+    const runner = this.callback(name);
+    this.#logger.log('run', name, runner);
+    return runner(initialState, props);
+  }
 
-  const andThenFx = (dispatch, { args }) => dispatch(...args);
-  const andThen = (name, props = {}) => [andThenFx, { args: act(name, props) }];
+  andThenFx(dispatch, { fn, props }) {
+    return dispatch(fn, props);
+  }
 
-  const withMiddleware = (middlewareFns = []) => {
-    middleware = middleware.concat(middlewareFns);
-    return {
-      withMiddleware,
-      act,
-      callback,
-    };
-  };
-
-  return {
-    declare,
-    act,
-    callback,
-    withMiddleware,
-    andThen,
-  };
-};
+  /**
+   * @param {string} name
+   * @props {Object} props
+   * @returns {Array}
+   */
+  andThen(name, props) {
+    return [this.andThenFx, { fn: this.callback(name), props }];
+  }
+}

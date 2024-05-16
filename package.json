@@ -1,6 +1,6 @@
 {
   "name": "hyperapp-actionpack",
-  "version": "0.0.1-beta.0",
+  "version": "0.0.1-beta.1",
   "description": "This is a proof of concept of how to build actions in a service container that you can manage globally.",
   "type": "module",
   "main": "actionPack.js",
@@ -11,5 +11,8 @@
   "license": "MIT",
   "dependencies": {
     "composable-state": "^0.1.0"
+  },
+  "volta": {
+    "node": "20.12.1"
   }
 }
