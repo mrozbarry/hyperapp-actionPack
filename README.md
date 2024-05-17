@@ -7,7 +7,7 @@ See [composable-state](https://github.com/mrozbarry/composable-state) for docume
 ## Install
 
 ```sh
-npm install --save @mrbarrysoftware/hyperapp-actionPack
+npm install --save hyperapp-actionPack
 ```
 
 ## Example
@@ -17,7 +17,7 @@ npm install --save @mrbarrysoftware/hyperapp-actionPack
 How to wire your actions into your app.
 
 ```js
-import ActionPack from '@mrbarrysoftware/hyperapp-actionPack';
+import ActionPack from 'hyperapp-actionPack';
 import { app, h, text } from 'hyperapp';
 import { select, replace } from 'composable-state';
 
@@ -42,12 +42,13 @@ app({
   },
 });
 ```
+
 ### Conditional updates based on state
 
 Get access to the global state to decide how to properly update the state.
 
 ```js
-import ActionPack from '@mrbarrysoftware/hyperapp-actionPack';
+import ActionPack from 'hyperapp-actionPack';
 import { select, replace, collect } from 'composable-state';
 
 const actions = new ActionPack();
@@ -76,7 +77,7 @@ actions.declare('++', (props, _state, { select, replace }) => select('counter', 
 And of course, your actions can schedule side-effects, too.
 
 ```js
-import ActionPack from '@mrbarrysoftware/hyperapp-actionPack';
+import ActionPack from 'hyperapp-actionPack';
 
 const actions = new ActionPack();
 
@@ -96,7 +97,7 @@ actions.declare('runMyEffect', (props, _state, { collect }) => [
 Chaining actions together has never been easier
 
 ```js
-import ActionPack from '@mrbarrysoftware/hyperapp-actionPack';
+import ActionPack from 'hyperapp-actionPack';
 
 const actions = new ActionPack();
 
@@ -115,11 +116,54 @@ To turn it on, just pass the global `console` object into the constructor.
 In the future, I may write proper debug/devtools adapter using the console api.
 
 ```js
-import ActionPack from '@mrbarrysoftware/hyperapp-actionPack';
+import ActionPack from 'hyperapp-actionPack';
 
 const actions = new ActionPack(console);
 
 actions.declare('++', (props, _state, { select, replace }) => (
   select('counter', replace(old => old + 1))
 );
+```
+
+### It sets up a singleton
+
+If you want to split up your actions across multiple file, you can do-so easily with the handle singleton static method.
+
+**actions1.js**
+
+```js
+import ActionPack from 'hyperapp-actionPack'
+
+const actions = ActionPack.singleton();
+
+actions.declare('foo', (_props, _state, { select, replace }) => select('name', replace('foo')));
+```
+
+**actions2.js**
+
+```js
+import ActionPack from 'hyperapp-actionPack'
+
+const actions = ActionPack.singleton();
+
+actions.declare('bar', (_props, _state, { select, replace }) => select('name', replace('bar')));
+```
+
+**app.js**
+
+```js
+import ActionPack from 'hyperapp-actionPack';
+import { app, h, text } from 'hyperapp';
+
+const actions = ActionPack.singleton();
+
+app({
+  init: { name: null },
+
+  view: (state) => h('div', {}, [
+    h('div', {}, `Hello${state.name ? `, ${state.name}` : ''}`),
+    h('button', { type: 'button', onclick: actions.act('action1.foo') }, text('Foo')),
+    h('button', { type: 'button', onclick: actions.act('action2.bar') }, text('Bar')),
+  ]),
+});
 ```

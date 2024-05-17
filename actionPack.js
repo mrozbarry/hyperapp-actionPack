@@ -104,4 +104,22 @@ export class ActionPack
   }
 }
 
+const factory = () => {
+  let directory = {};
+
+  /**
+   * @param {string} name
+   * @param {Console} logger
+   * @returns {ActionPack}
+   */
+  return (name = 'default', logger = nullLogger) => {
+    if (!(name in directory)) {
+      directory[name] = new ActionPack(logger);
+    }
+    return directory[name];
+  };
+};
+
+ActionPack.singleton = factory();
+
 export default ActionPack;

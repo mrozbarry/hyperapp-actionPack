@@ -1,11 +1,15 @@
 {
-  "name": "@mrbarrysoftware/hyperapp-actionpack",
-  "version": "0.0.1-beta.1",
+  "name": "hyperapp-actionpack",
+  "version": "0.0.1",
   "description": "This is a proof of concept of how to build actions in a service container that you can manage globally.",
+  "homepage": "https://github.com/mrozbarry/hyperapp-actionPack",
   "type": "module",
   "main": "actionPack.js",
+  "browser": "actionPack.browser.js",
   "scripts": {
-    "test": "node --test"
+    "test": "node --test",
+    "build": "rollup -c",
+    "prepublishOnly": "npm run build"
   },
   "author": "Alex Barry (npm@mrbarry.com)",
   "private": false,
@@ -15,5 +19,9 @@
   },
   "volta": {
     "node": "20.12.1"
+  },
+  "devDependencies": {
+    "@rollup/plugin-node-resolve": "^15.2.3",
+    "rollup": "^4.17.2"
   }
 }

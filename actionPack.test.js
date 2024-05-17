@@ -137,10 +137,20 @@ describe('lib/actionPack.js', () => {
     });
 
     it('dispatches the action through an effect', () => {
-      const dispatch = fakeFn(() => {});
       const props = { foo: 'bar' };
 
       assert.deepEqual([actionPack.andThenFx, { fn: actionFunction, props }], actionPack.andThen('test', props));
+    });
+  });
+
+  describe('singleton', () => {
+    it('creates a new singleton', () => {
+      assert.equal(true, ActionPack.singleton() instanceof ActionPack);
+    });
+
+    it('persists a singleton by name', () => {
+      const actionPack = ActionPack.singleton('foobar');
+      assert.strictEqual(ActionPack.singleton('foobar'), actionPack);
     });
   });
 });
