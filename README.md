@@ -4,6 +4,12 @@ This is a proof of concept of how to build [hyperapp](https://github.com/jorgebu
 
 See [composable-state](https://github.com/mrozbarry/composable-state) for documentation on state updates.
 
+## Install
+
+```sh
+npm install --save @mrbarrysoftware/hyperapp-actionPack
+```
+
 ## Example
 
 ### Simplest
@@ -11,7 +17,7 @@ See [composable-state](https://github.com/mrozbarry/composable-state) for docume
 How to wire your actions into your app.
 
 ```js
-import ActionPack from 'hyperapp-actionPack';
+import ActionPack from '@mrbarrysoftware/hyperapp-actionPack';
 import { app, h, text } from 'hyperapp';
 import { select, replace } from 'composable-state';
 
@@ -41,7 +47,7 @@ app({
 Get access to the global state to decide how to properly update the state.
 
 ```js
-import ActionPack from 'hyperapp-actionPack';
+import ActionPack from '@mrbarrysoftware/hyperapp-actionPack';
 import { select, replace, collect } from 'composable-state';
 
 const actions = new ActionPack();
@@ -70,7 +76,7 @@ actions.declare('++', (props, _state, { select, replace }) => select('counter', 
 And of course, your actions can schedule side-effects, too.
 
 ```js
-import ActionPack from 'hyperapp-actionPack';
+import ActionPack from '@mrbarrysoftware/hyperapp-actionPack';
 
 const actions = new ActionPack();
 
@@ -90,7 +96,7 @@ actions.declare('runMyEffect', (props, _state, { collect }) => [
 Chaining actions together has never been easier
 
 ```js
-import ActionPack from 'hyperapp-actionPack';
+import ActionPack from '@mrbarrysoftware/hyperapp-actionPack';
 
 const actions = new ActionPack();
 
@@ -109,7 +115,7 @@ To turn it on, just pass the global `console` object into the constructor.
 In the future, I may write proper debug/devtools adapter using the console api.
 
 ```js
-import ActionPack from 'hyperapp-actionPack';
+import ActionPack from '@mrbarrysoftware/hyperapp-actionPack';
 
 const actions = new ActionPack(console);
 
