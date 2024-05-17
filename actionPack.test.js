@@ -1,7 +1,7 @@
 import assert from 'node:assert/strict';
 import { describe, it, beforeEach } from "node:test";
 
-import { ActionPack } from './actionPack.js';
+import ActionPack from './actionPack.js';
 import { select, replace } from 'composable-state';
 
 const fakeFn = (func) => {

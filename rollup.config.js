@@ -4,7 +4,7 @@ export default {
   input: 'actionPack.js',
   output: {
     file: 'actionPack.browser.js',
-    format: 'cjs'
+    format: 'amd'
   },
   plugins: [nodeResolve()]
 };

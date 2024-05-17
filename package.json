@@ -1,6 +1,6 @@
 {
   "name": "hyperapp-actionpack",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "This is a proof of concept of how to build actions in a service container that you can manage globally.",
   "homepage": "https://github.com/mrozbarry/hyperapp-actionPack",
   "type": "module",

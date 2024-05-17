@@ -27,7 +27,7 @@ const action = (name, fn, middleware = [], logger = nullLogger) => {
   };
 };
 
-export class ActionPack
+class ActionPack
 {
   #logger = null;
   #actions = {};
