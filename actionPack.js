@@ -1,4 +1,4 @@
-import { collect, composable } from 'composable-state';
+import * as composable from 'composable-state';
 
 const nullLogger = {
   groupCollapsed: () => {},
@@ -14,11 +14,11 @@ const action = (name, fn, middleware = [], logger = nullLogger) => {
     logger.log('state', state);
     logger.log('props', props);
 
-    const [actionMutations, ...effects] = [].concat(fn(props, state));
+    const [actionMutations, ...effects] = [].concat(fn(props, state, composable));
     logger.log('mutations', actionMutations);
     logger.log('effects', effects);
 
-    const nextState = composable(state, collect([...middleware.map(callback => callback(props)), actionMutations]));
+    const nextState = composable.composable(state, composable.collect([...middleware.map(callback => callback(props)), actionMutations]));
     logger.log('computed state', nextState);
 
     logger.groupEnd();
@@ -103,3 +103,5 @@ export class ActionPack
     return [this.andThenFx, { fn: this.callback(name), props }];
   }
 }
+
+export default ActionPack;
