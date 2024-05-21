@@ -1,11 +1,11 @@
 {
   "name": "hyperapp-actionpack",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "This is a proof of concept of how to build actions in a service container that you can manage globally.",
   "homepage": "https://github.com/mrozbarry/hyperapp-actionPack",
   "type": "module",
   "main": "actionPack.js",
-  "browser": "actionPack.browser.js",
+  "browser": "actionPack.bundle.js",
   "scripts": {
     "test": "node --test",
     "build": "rollup -c",
@@ -21,6 +21,7 @@
     "node": "20.12.1"
   },
   "devDependencies": {
+    "@rollup/plugin-commonjs": "^25.0.7",
     "@rollup/plugin-node-resolve": "^15.2.3",
     "rollup": "^4.17.2"
   }
