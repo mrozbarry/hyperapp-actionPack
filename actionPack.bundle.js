@@ -132,6 +132,13 @@ class ActionPack
   }
 
   /**
+   * @returns {Array<String>}
+   */
+  getActions() {
+    return Object.keys(this.#actions);
+  }
+
+  /**
    * @param {string} name
    * @param {Function} stateMutator
    * @returns {Function}

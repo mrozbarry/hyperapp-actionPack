@@ -79,6 +79,18 @@ describe('lib/actionPack.js', () => {
     });
   });
 
+  describe('getActions', () => {
+    it('has an empty list', () => {
+      assert.deepEqual([], actionPack.getActions());
+    });
+
+    it('lists action names', () => {
+      actionPack.declare('foo', (_p, _, { selectAll }) => selectAll({}));
+      actionPack.declare('bar', (_p, _, { selectAll }) => selectAll({}));
+      assert.deepEqual(['foo', 'bar'], actionPack.getActions());
+    });
+  });
+
   describe('callback', () => {
     let actionFunction = null;
 
